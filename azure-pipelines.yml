@@ -20,24 +20,17 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
+    # - task: Docker@2
+    #   displayName: Build an image
+    #   inputs:
+    #     command: build
+    #     dockerfile: '$(Build.SourcesDirectory)/Dockerfile.autogpt'
+    #     tags: |
+    #       $(tag)
     - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile.autogpt'
-        tags: |
-          $(tag)
-    - task: Docker@2
-      displayName: tag
-      inputs:
-        containerRegistry: 'docker-phkl-arch-gov'
-        repository: autogpt
-        command: tag
-        arguments: 'autogpt:$(tag) docker-phkl-arch-gov.registry.pruconnect.net/autogpt:$(tag)'
-    - task: Docker@2
-      displayName: 'push '
       inputs:
         containerRegistry: 'docker-phkl-arch-gov'
-        repository: nginx
-        command: push
-        tags: $(tag)
+        repository: 'autogpt'
+        command: 'buildAndPush'
+        Dockerfile: '$(Build.SourcesDirectory)/Dockerfile.autogpt'
+        tags: 'latest'
